@@ -1,0 +1,30 @@
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: admin
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      config:
+        server-addr: 47.243.91.39: 8848
+        file-extension: yml
+        timeout: 3000
+        namespace: f8253aa2-7629-4ae9-8db4-fc3dfb35f16c
+        ext-config:
+          - data-id: admin.yml
+            refresh: true
+          - data-id: mq.yml
+            refresh: true
+          - data-id: db.yml
+            refresh: true
+          - data-id: redis.yml
+            refresh: true
+          - data-id: other.yml
+            refresh: true
+          - data-id: account.yml
+            refresh: true
+          - data-id: gg.yml
+            refresh: true

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcBindBankCardMapper">
+    <select id="listAll" resultType="com.mzwise.modules.ucenter.vo.BindBankCardVO">
+        SELECT t1.id,t1.member_id AS memberId, um.nickname,t1.bank_name AS bankName, t1.bank_card_number AS
+        bankCardNumber,
+        t1.account_opening_address AS accountOpeningAddress, t1.account_opening_branch AS accountOpeningBranch,
+        t1.create_time AS createTime, t1.update_time AS updateTime
+        FROM uc_bind_bank_card AS t1 LEFT JOIN uc_member um ON t1.member_id = um.id
+        ${ew.customSqlSegment}
+        <if test="nickname != null and nickname != '' ">
+            AND um.nickname LIKE CONCAT ('%',#{nickname},'%')
+        </if>
+        ORDER BY t1.create_time DESC
+    </select>
+
+</mapper>

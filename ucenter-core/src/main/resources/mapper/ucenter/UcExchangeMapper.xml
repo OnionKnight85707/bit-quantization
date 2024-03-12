@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcExchangeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.ucenter.entity.UcExchange">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="nickname" property="nickname"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="from_symbol" property="fromSymbol"/>
+        <result column="from_amount" property="fromAmount"/>
+        <result column="to_symbol" property="toSymbol"/>
+        <result column="to_amount" property="toAmount"/>
+        <result column="fee_amount" property="feeAmount"/>
+        <result column="fee_symbol" property="feeSymbol"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+</mapper>

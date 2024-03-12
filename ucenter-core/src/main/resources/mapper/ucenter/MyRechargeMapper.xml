@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcRechargeMapper">
+    <select id="calRechargeNumAndAmount" resultType="com.mzwise.modules.ucenter.vo.AdminRechargeVO">
+        SELECT COUNT(*) AS numberOfRecharge, SUM(amount) AS amountOfRecharge
+        FROM uc_recharge AS ur
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="statRechargeAndWithdrawalEachDay"
+            resultType="com.mzwise.modules.ucenter.vo.AdminStatRechargeAndWithdrawalEachDayVO">
+        SELECT
+        t1.dayDate,
+        t1.amount AS amountOfRecharge,
+        IFNULL(SUM(uw1.amount), 0) AS amountOfWithdrawal
+        FROM (
+        SELECT t0.dayDate,IFNULL(SUM(ur1.amount), 0) AS amount
+        FROM (
+        SELECT @date := DATE_ADD(#{endDate}, INTERVAL - number.number DAY) AS dayDate
+        FROM number
+        WHERE number <![CDATA[<]]> #{days}
+        ) AS t0
+        LEFT JOIN (SELECT ur.create_date ,ur.amount FROM uc_recharge AS ur WHERE ur.create_date BETWEEN #{beginDate} AND
+        #{endDate})AS ur1 ON ur1.create_date = t0.dayDate
+        GROUP BY t0.dayDate
+        ) AS t1
+        LEFT JOIN (SELECT uw.create_date ,uw.amount FROM uc_withdraw AS uw WHERE uw.status = 4 AND uw.create_date
+        BETWEEN #{beginDate} AND
+        #{endDate})AS uw1 ON uw1.create_date = t1.dayDate
+        GROUP BY t1.dayDate
+        HAVING 1 = 1
+        <if test="showRecharge != null and showRecharge !=''">
+            AND amountOfRecharge >0
+        </if>
+        <if test="showWithdrawal != null and showWithdrawal !=''">
+            AND amountOfWithdrawal >0
+        </if>
+        ORDER BY t1.dayDate DESC
+    </select>
+
+</mapper>

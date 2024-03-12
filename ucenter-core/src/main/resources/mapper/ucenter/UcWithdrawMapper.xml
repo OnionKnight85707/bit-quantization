@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcWithdrawMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.ucenter.entity.UcWithdraw">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="nickname" property="nickname"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="wallet_type" property="walletType"/>
+        <result column="address" property="address"/>
+        <result column="amount" property="amount"/>
+        <result column="arrived_amount" property="arrivedAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="deal_time" property="dealTime"/>
+        <result column="fee" property="fee"/>
+        <result column="remark" property="remark"/>
+        <result column="status" property="status"/>
+        <result column="symbolInfo" property="symbolInfo"/>
+        <result column="txid" property="txid"/>
+        <result column="refuse_reason" property="refuseReason"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.home.mapper.HomeCoinMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.home.entity.HomeCoin">
+        <id column="id" property="id" />
+        <result column="symbolInfo" property="symbolInfo" />
+        <result column="name" property="name" />
+        <result column="can_withdraw" property="canWithdraw" />
+        <result column="can_recharge" property="canRecharge" />
+        <result column="can_transfer" property="canTransfer" />
+        <result column="usd_rate" property="usdRate" />
+        <result column="cny_rate" property="cnyRate" />
+        <result column="is_platform_coin" property="isPlatformCoin" />
+        <result column="withdraw_scale" property="withdrawScale" />
+    </resultMap>
+
+</mapper>

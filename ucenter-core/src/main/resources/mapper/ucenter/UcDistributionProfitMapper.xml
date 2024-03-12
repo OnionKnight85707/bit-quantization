@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcDistributionProfitMapper">
+    <select id="statTodayProfitByType" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(benefit_amount), 0)
+        FROM uc_distribution_profit
+        WHERE member_id = #{memberId}
+          AND type = #{typeEnum}
+          AND create_time BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-%d %H:%i:%s') AND NOW()
+    </select>
+
+    <select id="statDistributionProfitGroupByTypeEachDay"
+            resultType="com.mzwise.modules.ucenter.vo.AdminStatDistributionGroupByDayAndTypeVO">
+        SELECT dayDate, IFNULL(SUM(benefitAmount), 0) AS amount
+        FROM (SELECT @date := DATE_ADD(#{endDate}, INTERVAL - number.number DAY) AS dayDate
+              FROM number
+              WHERE number <![CDATA[<]]> #{days}
+             ) AS t0
+                 LEFT JOIN (SELECT udp.benefit_amount AS benefitAmount, udp.create_date
+                            FROM uc_distribution_profit AS udp
+                            WHERE udp.type = #{type}
+                              AND udp.create_date BETWEEN #{beginDate} AND #{endDate}
+        ) AS udp1 ON udp1.create_date = t0.dayDate
+        GROUP BY t0.dayDate
+        ORDER BY t0.dayDate DESC
+    </select>
+
+    <select id="statDistributionProfitEachDay"
+            resultType="com.mzwise.modules.ucenter.vo.AdminStatDistributionProfitEachDayVO">
+        SELECT t2.dayDate,
+        t2.amountOfShare,
+        t2.amountOfCommunity,
+        IFNULL(SUM(udp3.dividendsAmount), 0) AS amountOfDividend,
+        t2.amountOfShare + t2.amountOfCommunity + IFNULL(SUM(udp3.dividendsAmount), 0) AS amountOfTotal
+        FROM (
+        SELECT t1.dayDate,
+        t1.amountOfShare,
+        IFNULL(SUM(udp2.communityAmount), 0) AS amountOfCommunity
+        FROM (
+        SELECT dayDate,
+        IFNULL(SUM(udp1.shareAmount), 0) AS amountOfShare
+        FROM (SELECT @date := DATE_ADD(#{endDate}, INTERVAL - number.number DAY) AS dayDate
+        FROM number
+        WHERE number <![CDATA[<]]> #{days}) AS t0
+        LEFT JOIN (
+        SELECT udp.benefit_amount AS shareAmount,
+        udp.create_date
+        FROM uc_distribution_profit AS udp
+        WHERE udp.create_date BETWEEN #{beginDate}
+        AND #{endDate}
+        AND udp.type = 0
+        ) AS udp1 ON udp1.create_date = t0.dayDate
+        GROUP BY t0.dayDate
+        ) AS t1
+        LEFT JOIN (
+        SELECT udp.benefit_amount AS communityAmount,
+        udp.create_date
+        FROM uc_distribution_profit AS udp
+        WHERE udp.create_date BETWEEN #{beginDate}
+        AND #{endDate}
+        AND udp.type = 1
+        ) AS udp2 ON udp2.create_date = t1.dayDate
+        GROUP BY t1.dayDate
+        ) AS t2
+        LEFT JOIN (
+        SELECT udp.benefit_amount AS dividendsAmount,
+        udp.create_date
+        FROM uc_distribution_profit AS udp
+        WHERE udp.create_date BETWEEN #{beginDate}
+        AND #{endDate}
+        AND udp.type = 3
+        ) AS udp3 ON udp3.create_date = t2.dayDate
+        GROUP BY t2.dayDate
+        HAVING 1= 1
+        <if test="showShareProfit != null and showShareProfit == true">
+            AND amountOfShare >0
+        </if>
+        <if test="showCommunityProfit != null and showCommunityProfit == true">
+            AND amountOfCommunity >0
+        </if>
+        <if test="showDividendsProfit != null and showDividendsProfit == true">
+            AND amountOfDividend >0
+        </if>
+        <if test="showTotalProfit != null and showTotalProfit == true">
+            AND amountOfTotal >0
+        </if>
+        ORDER BY t2.dayDate DESC
+    </select>
+
+    <select id="listProfitRecord" resultType="com.mzwise.modules.ucenter.vo.AdminDistributionProfitRecordVO">
+        SELECT udp.id, type, member_id, benefit_member_id, member_nickname, benefit_member_nickname, benefit_amount,
+        unit, create_time, create_date, update_time, um.phone,um.email
+        FROM uc_distribution_profit AS udp
+        LEFT JOIN uc_member AS um ON udp.benefit_member_id = um.id
+        ${ew.customSqlSegment}
+        <if test="phone!=null and phone!=''">
+            AND um.phone LIKE #{phone}"%"
+        </if>
+        <if test="email!=null and email!=''">
+            AND um.email LIKE "%"#{email}"%"
+        </if>
+        <if test="nickname!=null and nickname!=''">
+            AND um.nickname LIKE "%"#{nickname}"%"
+        </if>
+        ORDER BY udp.create_time DESC
+    </select>
+
+
+</mapper>

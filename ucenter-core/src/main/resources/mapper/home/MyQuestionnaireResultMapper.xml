@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.home.mapper.HomeQuestionnaireResultMapper">
+    <select id="queryByMemberId" resultType="com.mzwise.modules.ucenter.vo.AdminQuestionnaireResultsVO">
+        SELECT hqr.member_id        AS memberId,
+               hqr.questionnaire_id AS questionnaireId,
+               hqr.answer_index     AS answerIndex,
+               hqr.create_time      AS creatTime,
+               hq.language          AS language,
+               hq.subject           AS subject,
+               hq.options           AS options
+        FROM home_questionnaire_result AS hqr
+                 LEFT JOIN home_questionnaire AS hq ON hqr.questionnaire_id = hq.id
+        WHERE hqr.member_id = #{memberId}
+        ORDER BY hq.sort
+    </select>
+</mapper>

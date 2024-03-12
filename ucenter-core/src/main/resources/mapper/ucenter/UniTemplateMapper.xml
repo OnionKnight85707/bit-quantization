@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UniTemplateMapper">
+
+    <select id="list" resultType="com.mzwise.modules.ucenter.entity.UniTemplate">
+        select * from uni_template
+    </select>
+
+    <select id="getOneById" resultType="com.mzwise.modules.ucenter.entity.UniTemplate">
+        select * from uni_template where id=#{id}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.mzwise.modules.ucenter.entity.UniTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into uni_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="leverage != null">leverage,</if>
+            <if test="firstType != null">first_type,</if>
+            <if test="firstValue != null">`first_value`,</if>
+            <if test="positionType != null">position_type,</if>
+            <if test="position != null">position,</if>
+            <if test="openCloseMode != null">open_close_mode,</if>
+            <if test="stopParam != null">stop_param,</if>
+            <if test="coverTimes != null">cover_times,</if>
+            <if test="coverParam != null">cover_param,</if>
+            <if test="memo != null">memo,</if>
+            <if test="settleType != null">settle_type,</if>
+            <if test="expectedRatio != null">expected_ratio,</if>
+            <if test="closeRatio != null">close_ratio,</if>
+            <if test="loopMode != null">loop_mode,</if>
+            <if test="frozenRatio != null">frozen_ratio,</if>
+            <if test="outSignalType != null">out_signal_type,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="leverage != null">#{leverage,jdbcType=INTEGER},</if>
+            <if test="firstType != null">#{firstType,jdbcType=INTEGER},</if>
+            <if test="firstValue != null">#{firstValue,jdbcType=DECIMAL},</if>
+            <if test="positionType != null">#{positionType,jdbcType=INTEGER},</if>
+            <if test="position != null">#{position,jdbcType=DECIMAL},</if>
+            <if test="openCloseMode != null">#{openCloseMode,jdbcType=INTEGER},</if>
+            <if test="stopParam != null">#{stopParam,jdbcType=VARCHAR},</if>
+            <if test="coverTimes != null">#{coverTimes,jdbcType=INTEGER},</if>
+            <if test="coverParam != null">#{coverParam,jdbcType=VARCHAR},</if>
+            <if test="memo != null">#{memo,jdbcType=VARCHAR},</if>
+            <if test="settleType != null">#{settleType,jdbcType=SMALLINT},</if>
+            <if test="expectedRatio != null">#{expectedRatio,jdbcType=DECIMAL},</if>
+            <if test="closeRatio != null">#{closeRatio,jdbcType=VARCHAR},</if>
+            <if test="loopMode != null">#{loopMode,jdbcType=SMALLINT},</if>
+            <if test="frozenRatio != null">#{frozenRatio,jdbcType=DECIMAL},</if>
+            <if test="outSignalType != null">#{outSignalType,jdbcType=SMALLINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.mzwise.modules.ucenter.entity.UniTemplate">
+        update uni_template
+        <set>
+            <if test="id != null">id = #{id,jdbcType=INTEGER},</if>
+            <if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+            <if test="leverage != null">leverage = #{leverage,jdbcType=INTEGER},</if>
+            <if test="firstType != null">first_type = #{firstType,jdbcType=INTEGER},</if>
+            <if test="firstValue != null">`first_value` = #{firstValue,jdbcType=DECIMAL},</if>
+            <if test="positionType != null">position_type = #{positionType,jdbcType=INTEGER},</if>
+            <if test="position != null">position = #{position,jdbcType=DECIMAL},</if>
+            <if test="openCloseMode != null">open_close_mode = #{openCloseMode,jdbcType=INTEGER},</if>
+            <if test="stopParam != null">stop_param = #{stopParam,jdbcType=VARCHAR},</if>
+            <if test="coverTimes != null">cover_times = #{coverTimes,jdbcType=INTEGER},</if>
+            <if test="coverParam != null">cover_param = #{coverParam,jdbcType=VARCHAR},</if>
+            <if test="memo != null">memo = #{memo,jdbcType=VARCHAR},</if>
+            <if test="settleType != null">settle_type = #{settleType,jdbcType=SMALLINT},</if>
+            <if test="expectedRatio != null">expected_ratio = #{expectedRatio,jdbcType=DECIMAL},</if>
+            <if test="closeRatio != null">close_ratio = #{closeRatio,jdbcType=VARCHAR},</if>
+            <if test="loopMode != null">loop_mode = #{loopMode,jdbcType=SMALLINT},</if>
+            <if test="frozenRatio != null">frozen_ratio = #{frozenRatio,jdbcType=DECIMAL},</if>
+            <if test="outSignalType != null">out_signal_type = #{outSignalType,jdbcType=SMALLINT},</if>
+            <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByTemplateId" parameterType="java.lang.Long" >
+        delete from uni_template where id=#{id}
+    </delete>
+
+</mapper>

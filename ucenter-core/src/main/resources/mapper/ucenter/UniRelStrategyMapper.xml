@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UniRelStrategyMapper">
+
+    <resultMap id="RelstrategyList" type="com.mzwise.modules.ucenter.vo.UniRelStrategyVO">
+        <id property="id" column="id"/>
+        <result property="userTypeId" column="user_type_id"/>
+        <result property="strategyTypeId" column="strategy_type_id"/>
+        <collection property="list" ofType="com.mzwise.modules.ucenter.entity.UniSmallStrategy">
+            <id column="list_id" property="id"/>
+            <result column="list_name" property="name"/>
+            <result column="big_strategy_id" property="bigStrategyId"/>
+            <result column="symbol_list" property="symbolList"/>
+            <result column="risk" property="risk"/>
+            <result column="template_id" property="templateId"/>
+            <result column="url" property="url"/>
+            <result column="list_sort" property="sort"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryUniRelStrategy" resultMap="RelstrategyList">
+        select  r.id,r.user_type_id,s.id list_id,s.name list_name,s.big_strategy_id,s.symbol_list,s.risk,s.template_id,s.url,s.sort list_sort
+        from uni_rel_strategy r left join uni_small_strategy s on r.strategy_type_id=s.id
+--         select id,user_type_id,strategy_type_id from uni_rel_strategy
+    </select>
+
+    <!-- 根据用户类别id查询小策略 -->
+    <select id="selSmallStrategyByUserTypeId" parameterType="java.lang.Integer" resultType="com.mzwise.common.dto.IdAndNameVo">
+        select ss.id, ss.`name`
+        from uni_rel_strategy rs
+        left join uni_small_strategy ss on rs.strategy_type_id = ss.id
+        where rs.user_type_id = #{userTypeId}
+    </select>
+
+    <delete id="delById" parameterType="java.lang.Long">
+        delete from uni_rel_strategy where user_type_id=#{userTypeId} and strategy_type_id=#{smallStrategyId}
+    </delete>
+
+    <delete id="delRelBySmallStrategyId" parameterType="java.lang.Long">
+        delete from uni_rel_strategy where strategy_type_id=#{smallStrategyId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.DataAccumulationMapper">
+
+    <select id="registeredTotal" resultType="java.lang.Long">
+        select COUNT(id) from uc_member
+    </select>
+
+
+    <select id="openStrategyUsersTotal" resultType="java.lang.Long">
+        select  COUNT(distinct member_id) from quant_strategy
+    </select>
+
+    <select id="orderProfitTotal" resultType="java.math.BigDecimal">
+        select SUM(profit) as orderProfitTotal  FROM uc_profit_detail
+    </select>
+
+    <select id="networkRechargeTotal" resultType="java.math.BigDecimal">
+        SELECT sum(amount) as networkRechargeTotal from uc_recharge where recharge_type=2
+    </select>
+
+    <select id="managementRechargeTotal" resultType="java.math.BigDecimal">
+        SELECT sum(amount) as managementRechargeTotal from uc_recharge where recharge_type=1;
+    </select>
+
+    <!--公司收益 (钱包表platform = 1 的 balance )-->
+    <select id="getAllBalance" resultType="java.math.BigDecimal">
+        select sum(balance) from uc_wallet where is_platform = 1
+    </select>
+
+    <!--用户钱包累计余额 （钱包表的balance）-->
+    <select id="getAllUserBalance" resultType="java.math.BigDecimal">
+        select IFNULL(sum(balance), 0) from uc_wallet where is_platform = 0
+    </select>
+
+    <!--累计提币数量 (uc_withdraw status为成功的)-->
+    <select id="getAllWithdrawalAmount" resultType="java.math.BigDecimal">
+        select IFNULL(sum(amount), 0) from uc_withdraw where `status` = 5
+    </select>
+
+    <!--累计合伙人分红数量 (uc_member表的partner_total_commission)-->
+    <select id="getAllPartnerTotalCommission" resultType="java.math.BigDecimal">
+        select sum(partner_total_commission) from uc_member
+    </select>
+
+    <!--累计赠送USDT-->
+    <select id="getAllGivenUSDT" resultType="java.math.BigDecimal">
+        select sum(ticket) from uc_wallet
+    </select>
+
+    <!--用户钱包累计赠送券余额-->
+    <select id="getAllTotalTicket" resultType="java.math.BigDecimal">
+        select sum(total_ticket) from uc_wallet
+    </select>
+
+</mapper>

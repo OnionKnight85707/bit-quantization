@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UniSmallStrategyMapper">
+
+    <select id="getByName" resultType="com.mzwise.modules.ucenter.entity.UniSmallStrategy">
+        select * from uni_small_strategy where name =#{name}
+    </select>
+
+    <!-- 根据用户查询所有关联的小策略 -->
+    <select id="selAllSmallStrategyByMemberId" parameterType="java.lang.Long" resultType="com.mzwise.modules.ucenter.entity.UniSmallStrategy">
+        select ss.*
+        from uni_small_strategy ss
+        left join uni_rel_strategy rs on ss.id = rs.strategy_type_id
+        left join uc_member m on rs.user_type_id = m.user_type_id
+        where m.id = #{memberId}
+    </select>
+
+
+    <select id="getByToken" resultType="com.mzwise.modules.ucenter.entity.UniSmallStrategy">
+        select * from  uni_small_strategy  where token =#{token}
+    </select>
+
+
+    <select id="countByTemplateId" resultType="java.lang.Integer">
+        SELECT  count(*) from uni_small_strategy where template_id=#{templateId}
+    </select>
+
+    <select id="countBySmallStrategyId" resultType="java.lang.Integer">
+        SELECT count(*) from quant_strategy where small_strategy_id= #{smallStrategyId};
+    </select>
+
+    <delete id="delSmallStrategy" parameterType="java.lang.Long">
+        delete from uni_small_strategy where id=#{id}
+    </delete>
+
+    <select id="countByBigStrategyId" resultType="java.lang.Integer">
+        select count(*) from uni_small_strategy where big_strategy_id=#{bigStrategyId}
+    </select>
+
+    <select id="getOutSignalType" resultType="java.lang.Integer">
+        select ut.out_signal_type
+        from uni_small_strategy us left join uni_template ut on us.template_id=ut.id
+        where us.token=#{token}
+    </select>
+
+
+</mapper>

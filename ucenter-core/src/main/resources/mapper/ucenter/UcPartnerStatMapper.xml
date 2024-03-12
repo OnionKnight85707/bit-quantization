@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcPartnerStatMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.ucenter.entity.UcPartnerStat">
+        <id column="id" property="id" />
+        <result column="member_id" property="memberId" />
+        <result column="type" property="type" />
+        <result column="amount" property="amount" />
+        <result column="stat_day" property="statDay" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcProfitMapper">
+
+    <!-- 更新合约收益 -->
+    <update id="updateSwapProfit" parameterType="java.lang.Long">
+        update uc_quant set swap_today_profit = swap_today_profit + #{profit}, swap_total_profit = swap_total_profit + #{profit} where member_id = #{memberId}
+    </update>
+
+</mapper>

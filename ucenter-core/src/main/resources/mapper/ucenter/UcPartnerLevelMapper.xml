@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcPartnerLevelMapper">
+
+    <!-- 查询合伙人佣金相关信息 -->
+    <select id="partnerCommissionInfo" parameterType="java.lang.Long" resultType="com.mzwise.modules.ucenter.vo.PartnerCommissionInfoVo">
+        select m.parent_id as parentId, is_partner as isPartner, partner_commission_rate as setRate, pl.id as levelId,
+               pl.`level`, pl.commission_rate as levelRate
+        from uc_member m
+        left join uc_partner_level pl on m.partner_level_id = pl.id
+        where m.id = #{memberId}
+    </select>
+
+
+    <select id="levelCommissionRate" resultType="java.math.BigDecimal">
+        select `commission_rate` from `uc_partner_level` where `name` = '白银合伙人' and apply_layer = 1
+    </select>
+
+</mapper>

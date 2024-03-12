@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcServiceChargeRecordMapper">
+
+    <select id="sumServiceChargeLastWeek" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(amount), 0)
+        FROM uc_service_charge_record
+        WHERE create_time between DATE_ADD(CURDATE(), INTERVAL -7 DAY) AND CURDATE()
+    </select>
+
+</mapper>

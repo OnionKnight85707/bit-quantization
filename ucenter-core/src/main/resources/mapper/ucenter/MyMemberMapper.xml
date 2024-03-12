@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcMemberMapper">
+    <select id="queryAllMySubordinates" resultType="java.lang.Long">
+        WITH RECURSIVE cte AS (
+            SELECT id,
+                   parent_id
+            FROM uc_member
+            WHERE parent_id = #{memberId}
+            UNION
+            (SELECT b.id, b.parent_id
+             FROM uc_member AS b
+                      INNER JOIN cte ON b.parent_id = cte.id)
+        )
+        SELECT id
+        FROM cte
+    </select>
+
+    <select id="listAllMemberSelective" resultType="com.mzwise.modules.ucenter.vo.AdminMemberVO">
+        SELECT um.id,
+        um.nickname,
+        um.phone,
+        um.email,
+        um.parent_id AS parentId,
+        um.promotion_code AS promotionCode,
+        um.parent_nickname AS parentNickname,
+        um.first_level_num AS firstLevelNum,
+        um.mining_is_eff AS miningIsEff,
+        um.is_effective AS isEffective,
+        um.registration_time AS registrationTime,
+        um.is_partner AS isPartner,
+        um.partner_level_id AS partnerLevelId,
+        um.partner_commission_rate AS partnerCommissionRate,
+        um.last_login_time as lastLoginTime,
+        um.last_login_ip as lastLoginIp,
+        um.ip_region as ipRegion,
+        um.status as status,
+        um.disable_instructions as disableInstructions
+        FROM uc_member AS um
+        ${ew.customSqlSegment}
+        <if test="orderColumn!=null and orderColumn!= '' and orderDirection!=null and orderDirection!=''">
+            ORDER BY ${orderColumn} ${orderDirection}
+        </if>
+    </select>
+
+    <select id="showMemberHomePage" resultType="com.mzwise.modules.ucenter.vo.AdminMemberHomePageVO">
+        SELECT um.nickname,
+               um.phone,
+               um.email,
+               um.promotion_code AS promotionCode,
+               um.risk_type      AS riskType
+        FROM uc_member AS um
+                 LEFT JOIN uc_quant AS uq ON um.id = uq.member_id
+        WHERE um.id = #{memberId}
+    </select>
+
+    <!-- 新增欠款 -->
+    <select id="addArrears">
+        update uc_member set un_pay = un_pay + #{arrears} where id = #{memberId}
+    </select>
+
+    <!-- 减掉欠款 -->
+    <select id="reduceArrears">
+        update uc_member set un_pay = un_pay - #{arrears} where id = #{memberId}
+    </select>
+
+    <!-- 增加合伙人佣金 -->
+    <update id="addPartnerCommission">
+        update uc_member set partner_total_commission = partner_total_commission + #{commission} where id = #{memberId}
+    </update>
+
+    <!-- 新增量化账户 -->
+    <insert id="addUcQuant" parameterType="java.lang.Long">
+        insert into uc_quant(member_id, enabled) values(#{memberId}, 1)
+    </insert>
+
+
+    <select id="getParentNickname" resultType="java.lang.String">
+        select `nickname` from `uc_member` where id=#{parentId}
+    </select>
+
+    <select id="getMySubCount" resultType="java.lang.Integer">
+        select  count(*) from `uc_member` where `parent_id`=#{parentId}
+    </select>
+
+</mapper>

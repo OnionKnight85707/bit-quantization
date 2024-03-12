@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcProfitDetailMapper">
+
+    <!-- 查询昨天交易汇总 -->
+    <select id="selYesterdayEarningsStatistics" resultType="com.mzwise.modules.ucenter.vo.DailyEarningsStatisticsVo">
+        select member_id as memberId, sum(profit) as profitSum, sum(amount) as amountSum
+        from uc_profit_detail
+        where TO_DAYS(NOW()) - TO_DAYS(create_time) = 1
+        group by member_id
+    </select>
+
+    <!-- 设置全部为已扣费 -->
+    <update id="setUpAllDeductions" parameterType="java.lang.Long">
+        update uc_profit_detail set is_deduct = 1 where member_id = #{memberId}
+    </update>
+
+    <select id="queryAllProfit" resultType="java.math.BigDecimal">
+        select sum(profit)
+        from uc_profit_detail
+        where quant_id = #{quantId} and profit &gt; 0
+    </select>
+
+    <!-- 收益详情 -->
+    <select id="profitDetails" resultType="com.mzwise.modules.ucenter.vo.ProfitDetailsVo">
+        select order_id as orderId, profit, create_time as createTime
+        from uc_profit_detail
+        where member_id = #{memberId}
+        order by create_time desc, id desc
+    </select>
+
+    <!-- 按日统计收益 -->
+    <select id="profitDetailsForDay" resultType="com.mzwise.modules.ucenter.vo.ProfitDetailsVo">
+        select any_value(order_id) as orderId, sum(profit) as profit, DATE_FORMAT(create_time, '%Y-%m-%d') as createTime
+        from uc_profit_detail
+        where member_id = #{memberId}
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d')
+        order by create_time desc, id desc
+    </select>
+
+    <!-- 月度统计收益 -->
+    <select id="profitDetailsForMonth" resultType="com.mzwise.modules.ucenter.vo.ProfitDetailsVo">
+        select any_value(order_id) as orderId, sum(profit) as profit, DATE_FORMAT(create_time, '%Y-%m') as createTime
+        from uc_profit_detail
+        where member_id = #{memberId}
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m')
+        order by create_time desc, id desc
+    </select>
+
+    <!-- 年度统计收益 -->
+    <select id="profitDetailsForYear" resultType="com.mzwise.modules.ucenter.vo.ProfitDetailsVo">
+        select any_value(order_id) as orderId, sum(profit) as profit, DATE_FORMAT(create_time, '%Y') as createTime
+        from uc_profit_detail
+        where member_id = #{memberId}
+        GROUP BY DATE_FORMAT(create_time, '%Y')
+        order by create_time desc, id desc
+    </select>
+
+</mapper>

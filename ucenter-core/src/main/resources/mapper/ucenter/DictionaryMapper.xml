@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.DictionaryMapper">
+
+    <!--查询最大短信发送条数-->
+    <select id="queryMaxSendMessage" resultType="java.lang.String">
+        select `val` from dictionary where `name` = 'max_send_message_num'
+    </select>
+
+    <!--列表查询字典表数据-->
+    <select id="listAllDictionary" resultType="com.mzwise.modules.ucenter.entity.Dictionary">
+        select `id`, `name`, `val`, `explanation` from dictionary
+        where 1=1
+        <if test="explanation != null and explanation != ''">
+            and explanation LIKE CONCAT('%', #{explanation}, '%')
+        </if>
+    </select>
+
+
+    <select id="getPartnerMaxCommissionRatio" resultType="java.math.BigDecimal">
+        SELECT `val` from dictionary where name='partner_max_commission_ratio';
+    </select>
+
+</mapper>

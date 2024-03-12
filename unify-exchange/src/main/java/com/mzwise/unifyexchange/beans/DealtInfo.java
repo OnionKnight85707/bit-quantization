@@ -1,0 +1,67 @@
+package com.mzwise.unifyexchange.beans;
+
+import com.mzwise.unifyexchange.common.BaseForm;
+import com.mzwise.unifyexchange.common.Constants;
+
+public class DealtInfo extends BaseForm {
+
+
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7957675042135563397L;
+	/**
+	  * "id": 成交id,
+	  */
+	 private String id;
+     /**
+      * "price": 成交价,
+      */
+     private double price;
+     /**
+      * "amount": 成交量,
+      */
+     private double volume;
+     /**
+      * "direction": 主动成交方向,
+      */
+     private Constants.TRADING_DIRECTION direction;
+     /**
+      * "ts": 成交时间
+      */
+     private long ts;
+     
+     
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public double getVolume() {
+		return volume;
+	}
+	public void setVolume(double volume) {
+		this.volume = volume;
+	}
+	public Constants.TRADING_DIRECTION getDirection() {
+		return direction;
+	}
+	public void setDirection(Constants.TRADING_DIRECTION direction) {
+		this.direction = direction;
+	}
+	public long getTs() {
+		return ts;
+	}
+	public void setTs(long ts) {
+		this.ts = ts;
+	}
+	
+     
+}

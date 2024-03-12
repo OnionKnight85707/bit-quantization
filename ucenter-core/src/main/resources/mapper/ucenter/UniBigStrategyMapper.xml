@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UniBigStrategyMapper">
+
+    <resultMap id="bigStrategyList" type="com.mzwise.modules.ucenter.vo.BigStrategyVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sort" column="sort"/>
+        <collection property="list" ofType="com.mzwise.modules.ucenter.vo.UniSmallStrategyVO">
+            <id column="list_id" property="id"/>
+            <result column="list_name" property="name"/>
+            <result column="big_strategy_id" property="bigStrategyId"/>
+            <result column="symbol_list" property="symbolList"/>
+            <result column="risk" property="risk"/>
+            <result column="template_id" property="templateId"/>
+            <result column="url" property="url"/>
+            <result column="list_sort" property="sort"/>
+            <result column="token" property="token"/>
+            <result column="ip" property="ip"/>
+            <result column="mask" property="mask"/>
+            <result column="platform" property="platform"/>
+            <result column="accessControl" property="accessControl"/>
+        </collection>
+    </resultMap>
+    <resultMap id="StrategyList" type="com.mzwise.modules.ucenter.entity.UniBigStrategy">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+    <select id="queryUniBigStrategy" resultMap="bigStrategyList">
+    select  b.id,b.name,b.sort,s.id list_id,s.name list_name,s.big_strategy_id,s.symbol_list,s.risk,s.template_id,s.url,s.sort list_sort,s.token,s.ip,s.mask,s.platform,
+           CONCAT_WS("/",s.ip,s.mask) as accessControl
+    from uni_big_strategy b left join uni_small_strategy s on b.id=s.big_strategy_id  ORDER BY b.sort asc,s.sort asc
+    </select>
+
+    <select id="getByName"  resultMap="StrategyList">
+        select `id`,`name`,`sort` from uni_big_strategy where name = #{name}
+    </select>
+
+<!--    <update id="updateUniBigStrategy">-->
+<!--        update uni_big_strategy set `name`=#{name},`order`=#{order} where `id`=#{id}-->
+<!--    </update>-->
+
+
+<!--    <insert id="addUniBigStrategy">-->
+<!--        insert uni_big_strategy (`name`,`order`) values (#{name},#{order})-->
+<!--    </insert>-->
+
+    <delete id="delById" parameterType="java.lang.Long">
+        delete from uni_big_strategy where id=#{id}
+    </delete>
+
+</mapper>

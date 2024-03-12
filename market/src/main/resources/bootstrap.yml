@@ -1,0 +1,26 @@
+server:
+  port: 6604
+  servlet:
+    context-path: /market
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: market
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      config:
+        server-addr: 47.243.91.39: 8848
+        file-extension: yml
+        timeout: 3000
+        namespace: f8253aa2-7629-4ae9-8db4-fc3dfb35f16c
+        ext-config:
+          - data-id: market.yml
+            refresh: true
+          - data-id: other.yml
+            refresh: true
+          - data-id: mongo.yml
+            refresh: true

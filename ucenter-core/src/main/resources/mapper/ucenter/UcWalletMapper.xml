@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcWalletMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.ucenter.entity.UcWallet">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="type" property="type"/>
+        <result column="symbolInfo" property="symbolInfo"/>
+        <result column="balance" property="balance"/>
+        <result column="frozen" property="frozen"/>
+        <result column="deposit" property="deposit"/>
+        <result column="address" property="address"/>
+        <result column="total_profit" property="totalProfit"/>
+        <result column="today_profit" property="todayProfit"/>
+    </resultMap>
+    <select id="checkBalance" resultType="java.lang.Integer">
+        select count(*)
+        from uc_wallet
+        where balance &gt;= #{amount}
+          and member_id = #{memberId}
+          and type = #{type}
+    </select>
+    <select id="checkFrozen" resultType="java.lang.Integer">
+        select count(*)
+        from uc_wallet
+        where frozen &gt;= #{amount}
+          and member_id = #{memberId}
+          and type = #{type}
+    </select>
+    <update id="increaseBalance">
+        update uc_wallet
+        set balance = balance + #{amount}
+        where member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="decreaseBalance">
+        update uc_wallet
+        set balance = balance - #{amount}
+        where balance &gt;= #{amount}
+          and member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="freezeBalance">
+        update uc_wallet
+        set balance = balance - #{amount},
+            frozen  = frozen + #{amount}
+        where balance &gt;= #{amount}
+          and member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="thawBalance">
+        update uc_wallet
+        set balance = balance + #{amount},
+            frozen  = frozen - #{amount}
+        where frozen &gt;= #{amount}
+          and member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="decreaseFrozen">
+        update uc_wallet
+        set frozen = frozen - #{amount}
+        where frozen &gt;= #{amount}
+          and member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="addProfit">
+        update uc_wallet
+        set total_profit = total_profit + #{amount},
+            today_profit = today_profit + #{amount}
+        where member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="setProfit">
+        update uc_wallet
+        set today_profit = #{todayProfit},
+            total_profit = #{totalProfit}
+        where member_id = #{memberId}
+          and type = #{type}
+    </update>
+    <update id="resetTodayProfit">
+        update uc_wallet
+        set today_profit = 0
+    </update>
+
+    <!-- 获取平台服务费比例 -->
+    <select id="getPlatformServiceRate" resultType="java.math.BigDecimal">
+        select charge_service_rate from quant_setting
+    </select>
+
+    <!-- 减少奖励金额 -->
+    <update id="subtractTicket">
+        update uc_wallet set ticket = ticket - #{amount} where id = #{walletId}
+    </update>
+
+    <!-- 减少余额 -->
+    <update id="subtractBalance">
+        update uc_wallet set balance = balance - #{amount} where id = #{walletId}
+    </update>
+
+    <!-- 增加余额 -->
+    <select id="addBalance">
+        update uc_wallet set balance = balance + #{amount} where id = #{walletId}
+    </select>
+
+    <!-- 平台收费 -->
+    <update id="platformCharges">
+        update uc_wallet set balance = balance + #{amount} where is_platform = 1
+    </update>
+
+    <!-- 平台扣费 -->
+    <update id="platformDeduction">
+        update uc_wallet set balance = balance - #{amount} where is_platform = 1
+    </update>
+
+    <!-- 更新钱包利润 -->
+    <update id="updateWalletProfit">
+        update uc_wallet set total_profit = total_profit + #{profit}, today_profit = today_profit + #{profit} where member_id = #{memberId} and type = 5
+    </update>
+
+    <!-- 根据订单id查询交易类型 -->
+    <select id="selTradeTypeByOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select trade_type from quant_order where id = #{orderId}
+    </select>
+
+    <!-- 更新合约收益 -->
+    <select id="updateSwapProfit">
+        update uc_quant set swap_total_profit = swap_total_profit + #{profit}, swap_today_profit = swap_today_profit + #{profit} where member_id = #{memberId}
+    </select>
+
+    <!-- 更新现货收益 -->
+    <select id="updateExchangeProfit">
+        update uc_quant set exchange_total_profit = exchange_total_profit + #{profit}, exchange_today_profit = exchange_today_profit + #{profit} where member_id = #{memberId}
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcMemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.ucenter.entity.UcMember">
+        <id column="id" property="id" />
+    </resultMap>
+    
+    <select id="queryPatner" resultType="java.math.BigDecimal">
+        select partner_total_commission as partnerTotalCommission from uc_member where id = #{memberId}
+    </select>
+
+    <select id="checkServiceCharge" resultType="com.mzwise.modules.ucenter.vo.CheckServiceChargeVO">
+        select id,email,un_pay,reminder_times from uc_member where un_pay <![CDATA[>]]>  0 and reminder_times <![CDATA[<=]]> 2
+    </select>
+
+    <!-- 欠费次数置零 -->
+    <update id="reminderTimesToZero" parameterType="java.lang.Long">
+        update uc_member set reminder_times = 0 where id = #{memberId}
+    </update>
+
+
+    <select id="checkSubCommissionRate" resultType="java.math.BigDecimal">
+        select max(`partner_commission_rate`) from uc_member where parent_id=#{parentId};
+    </select>
+
+</mapper>

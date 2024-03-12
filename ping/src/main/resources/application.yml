@@ -1,0 +1,13 @@
+server:
+  port: 6800
+spring:
+  application:
+    name: ping
+
+ding:
+  url: https://oapi.dingtalk.com/robot/send?access_token=a6d75f64e4a0f82cefd542739bec40927f7362d23dd38a453389435f5adb9904
+
+ucenter:
+  url: http://8.218.141.223/master/ucenter/ucCommonQuestion/listType
+
+

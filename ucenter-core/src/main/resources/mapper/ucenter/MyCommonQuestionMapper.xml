@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcCommonQuestionMapper">
+
+    <select id="showPageView" resultType="com.mzwise.modules.ucenter.entity.UcCommonQuestion">
+        SELECT *
+        FROM uc_common_question AS a
+        WHERE (SELECT COUNT(a.type)
+               FROM uc_common_question AS b
+               WHERE b.type = a.type
+                 AND b.create_time >= a.create_time)
+                <![CDATA[<=]]>
+              #{limit}
+        ORDER BY `type` ASC,
+                 create_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcStatisticsMapper">
+
+    <select id="listAllStatistics" resultType="com.mzwise.modules.ucenter.vo.UcStatisticsVo">
+        select * from uc_statistics where 1=1
+        <if test="beginTime != null and beginTime != ''">
+            and record_date >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and #{endTime} >= record_date
+        </if>
+        order by record_date desc
+    </select>
+
+    <insert id="resetEverydayDataStatistics" >
+        insert into uc_statistics(record_date) values(CURRENT_DATE())
+    </insert>
+
+    <!-- 增加注册用户数 -->
+    <update id="addRegisterNum">
+        update uc_statistics set register_num = register_num + 1 where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 增加网络充币数量 -->
+    <update id="addRechargeOnline" parameterType="java.math.BigDecimal">
+        update uc_statistics set recharge_online = recharge_online + #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 增加后台充币数量 -->
+    <update id="addRechargeBackstage" parameterType="java.math.BigDecimal">
+        update uc_statistics set recharge_backstage = recharge_backstage + #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 增加提币(成功)数量 -->
+    <update id="addWithdrawSuccess" parameterType="java.math.BigDecimal">
+        update uc_statistics set withdraw_success = withdraw_success + #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 增加用户合约收益 -->
+    <update id="addUserSwapProfit" parameterType="java.math.BigDecimal">
+        update uc_statistics set user_swap_profit = user_swap_profit + #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 增加公司收益 -->
+    <update id="addCompanyProfit" parameterType="java.math.BigDecimal">
+        update uc_statistics set company_profit = company_profit + #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 减少公司收益 -->
+    <update id="subtractCompanyProfit" parameterType="java.math.BigDecimal">
+        update uc_statistics set company_profit = company_profit - #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+    <!-- 增加合伙人佣金 -->
+    <update id="addPartnerCommission" parameterType="java.math.BigDecimal">
+        update uc_statistics set partner_commission = partner_commission + #{amount} where record_date = CURRENT_DATE()
+    </update>
+
+
+</mapper>

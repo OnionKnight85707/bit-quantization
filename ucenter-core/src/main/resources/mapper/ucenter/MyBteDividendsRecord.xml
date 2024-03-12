@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UcBteDividendsRecordMapper">
+    <select id="listSelective" resultType="com.mzwise.modules.ucenter.vo.AdminBTEDividendRecordVO">
+        SELECT member_id, amount, unit, create_time, um.nickname,um.phone,um.email
+        FROM uc_bte_dividends_record AS ubdr
+        LEFT JOIN uc_member AS um ON um.id = ubdr.member_id
+        ${ew.customSqlSegment}
+        <if test="phone!=null and phone!=''">
+            AND um.phone LIKE #{phone}"%"
+        </if>
+        <if test="email!=null and email!=''">
+            AND um.email LIKE "%"#{email}"%"
+        </if>
+        <if test="nickname!=null and nickname!=''">
+            AND um.nickname LIKE "%"#{nickname}"%"
+        </if>
+        ORDER BY ubdr.create_time DESC
+    </select>
+
+</mapper>

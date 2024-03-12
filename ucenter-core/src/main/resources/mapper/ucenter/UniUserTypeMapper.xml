@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.ucenter.mapper.UniUserTypeMapper">
+
+    <!--查询用户类别-->
+    <select id="queryUserType" resultType="com.mzwise.modules.ucenter.entity.UniUserType">
+        select * from uni_user_type
+        <if test="id != null">
+            where id != #{id}
+        </if>
+        order by `lower_limit`
+    </select>
+
+    <!--增加用户类别-->
+    <insert id="addUserType">
+        insert into uni_user_type(`name`, `upper_limit`, `lower_limit`, `memo`) values(#{name}, #{upperLimit}, #{lowerLimit}, #{memo})
+    </insert>
+
+    <!--修改用户类别-->
+    <update id="modifyUserType">
+        update uni_user_type as uut
+        set uut.`name` = #{name}, uut.`upper_limit` = #{upperLimit}, uut.`lower_limit` = #{lowerLimit}, uut.`memo` = #{memo}
+        where uut.id = #{id}
+    </update>
+
+    <!--修改 Member表 中用户类别-->
+    <update id="modifyMemberType">
+        update uc_member set user_type_id = #{userTypeId} where id = #{memberId}
+    </update>
+
+    <!--分页查询会员对应用户等级-->
+    <select id="queryAllUser" resultType="com.mzwise.modules.ucenter.vo.AdminMemberUserTypeVO">
+        select um.id, um.username, um.nickname, um.email, um.phone, uut.`name` as userTypeName
+        from uc_member as um
+        left JOIN uni_user_type as uut
+        on um.user_type_id = uut.id
+        where 1=1
+        <if test="userTypeId != null and userTypeId != ''">
+            and um.user_type_id = #{userTypeId}
+        </if>
+        <if test="email != null and email !='' ">
+            AND um.email like #{email}"%"
+        </if>
+    </select>
+
+    <!--判断用户类别在类别表中是否存在-->
+    <select id="checkUserTypeExist" resultType="java.lang.Integer">
+        select count(*) from uc_member where user_type_id = #{userTypeId}
+    </select>
+
+    <!--判断用户类别在 uni_rel_strategy 是否存在-->
+    <select id="checkUserTypeExistOnUniRelStrategy" resultType="java.lang.Integer">
+        select count(*) from uni_rel_strategy where user_type_id = #{userTypeId}
+    </select>
+
+</mapper>

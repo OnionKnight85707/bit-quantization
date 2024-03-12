@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.admin.mapper.UmsAdminLogMapper">
+
+    <!-- 管理员日志列表 -->
+    <select id="adminLogList" resultType="com.mzwise.modules.admin.vo.AdminLogListVo">
+        select al.id, al.admin_id as adminId, al.ip, al.action, al.module, al.before_param as beforeParam,
+            al.after_param as afterParam, al.description, al.create_time as createTime, a.username as adminName
+        from ums_admin_log al
+        left join ums_admin a on al.admin_id = a.id
+        where 1=1
+        <if test="param.adminId != null and param.adminId != ''">
+            and al.admin_id = #{param.adminId}
+        </if>
+        <if test="param.action != null and param.action != ''">
+            and al.action = #{param.action}
+        </if>
+        <if test="param.module != null and param.module != ''">
+            and al.module = #{param.module}
+        </if>
+        <if test="param.beginTime != null and param.beginTime != ''">
+            and al.create_time >= #{param.beginTime}
+        </if>
+        <if test="param.endTime != null and param.endTime != ''">
+            and #{param.endTime} >= al.create_time
+        </if>
+        order by al.create_time desc
+    </select>
+
+</mapper>

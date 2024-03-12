@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.admin.mapper.UmsAdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.admin.entity.UmsAdmin">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="icon" property="icon" />
+        <result column="email" property="email" />
+        <result column="nick_name" property="nickName" />
+        <result column="note" property="note" />
+        <result column="create_time" property="createTime" />
+        <result column="login_time" property="loginTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 管理员列表 -->
+    <select id="adminList" parameterType="java.lang.String" resultType="com.mzwise.common.dto.IdAndNameVo">
+        select id, username as `name`
+        from ums_admin
+        <if test="name != null and name != ''">
+            where username LIKE CONCAT('%', #{name}, '%')
+        </if>
+    </select>
+
+</mapper>

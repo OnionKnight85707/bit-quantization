@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mzwise.modules.admin.mapper.UmsRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mzwise.modules.admin.entity.UmsRole">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+        <result column="admin_count" property="adminCount" />
+        <result column="status" property="status" />
+        <result column="hidden" property="hidden" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 角色列表 -->
+    <select id="roleList" resultType="com.mzwise.modules.admin.entity.UmsRole">
+        SELECT ur.id, ur.name, ur.description, ur.status, ur.hidden, ur.sort, ur.create_time, count(uarr.id) as admin_count
+        FROM ums_role ur
+        LEFT JOIN ums_admin_role_relation uarr ON uarr.role_id = ur.id
+        WHERE hidden = false
+        <if test="keyword != null and keyword != ''">
+            AND ur.name like CONCAT('%', #{keyword}, '%')
+        </if>
+        GROUP BY ur.id
+    </select>
+
+</mapper>
